@@ -21,6 +21,11 @@
 
     </head>
     <body>
+        <div>
+            <a href="{% url 'display_page' %}">
+                <i class="fa fa-home" aria-hidden="true"></i>
+            </a>
+        </div>
         {% block content %}
         {% endblock %}
     </body>

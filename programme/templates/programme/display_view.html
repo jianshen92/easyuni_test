@@ -7,6 +7,75 @@
 
 {% block content %}
 <div>
-    <p>Hello World</p>
+    <h3>Programme Details</h3>
+    <div>
+        <a href="{% url 'program_cat' %}">Program Categories</a>
+    </div>
+    <div>
+        <a href="{% url 'program' %}">Programs</a>
+    </div>
+    <div>
+        <a href="{% url 'training' %}">Trainings</a>
+    </div>
+    <div>
+        <a href="{% url 'training_date' %}">Training Dates</a>
+    </div>
+</div>
+
+<div class="display-calender">
+    <table class="cal" width="890" border="1" cellpadding="0" cellspacing="0" bordercolor="#999999">
+       <tbody>
+          <tr>
+             <th width="166" class="cal-heading" rowspan="2">PROGRAM</th>
+             <th width="63" class="cal-heading" rowspan="2">TRAINER</th>
+             <th width="40" class="cal-heading" rowspan="2">RATE</th>
+             <th width="75" class="cal-heading" rowspan="2">VENUE</th>
+             <th width="110" class="cal-heading" rowspan="2">HOTEL</th>
+             <th class="cal-year1" colspan="6">2017</th>
+          </tr>
+          <tr>
+             {% for month in months %}
+             <th width="30" class="cal-year1">{{ month }}</th>
+             {% endfor %}
+          </tr>
+
+          {% for program_category in program_categories %}
+          <tr>
+             <td height="20" class="cal-category" bgcolor="#e9faff" colspan="29">{{ program_category.name }}</td>
+          </tr>
+              {% for program in program_category.program.all %}
+                  {% for training in program.training.all %}
+                     <tr>
+
+                     {% if forloop.first %}
+                         <td class="cal-program" rowspan="{{ program.training.all|length }}">{{ program.name }}</td>
+                     {% endif %}
+                         <td class="cal-program trainer-cell txt-wrap">{{ training.trainer }}</td>
+                         <td class="cal-program">{{ training.rate }}</td>
+                         <td class="cal-program">{{ training.venue }}</td>
+                         <td class="cal-program">{{ training.hotel }}</td>
+                     {% for month in months %}
+                     {% regroup training.training_date.all by get_start_date_month_name as training_dates %}
+                        <td>
+                            {% for start_date_month, dates in training_dates %}
+                                {% if start_date_month == month %}
+                                    {% for date in dates %}
+                                        {% if training.pdf %}
+                                            <a href="{{ training.pdf.url }}">{{ date.get_from_to_day }}</a>
+                                        {% else %}
+                                            <span>{{ date.get_from_to_day }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                     {% endfor %}
+                     </tr>
+                  {% endfor %}
+              {% endfor %}
+          {% endfor  %}
+
+       </tbody>
+    </table>
 </div>
 {% endblock %}

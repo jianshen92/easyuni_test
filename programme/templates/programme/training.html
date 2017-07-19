@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>Training</title>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>Training</h3>
+    <a href="{% url 'training_add' %}"><button class="btn btn-default">Add New Training</button></a>
+    <div>
+        {% for program_category in program_categories %}
+            <h3> {{ program_category.name }}</h3>
+            {% for program in program_category.program.all %}
+                <h4>{{ program.name }}</h4>
+                <ul>
+                {% for training in program.training.all %}
+                    <li><a href="{% url 'training_edit' training.id %}">{{ training }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+        {% endfor %}
+{#        {% for program in programs %}#}
+{#            <p>{{ program.category.name }}</p>#}
+{#        {% endfor %}#}
+    </div>
+</div>
+{% endblock %}

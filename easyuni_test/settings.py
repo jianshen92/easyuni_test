@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'programme.apps.ProgrammeConfig',
+    'programme',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,3 +125,5 @@ STATICFILES_DIRS = (
 
 # Media Files (PDF Upload)
 MEDIA_ROOT = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

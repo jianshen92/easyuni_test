@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>Programme Category</title>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>Programme Category</h3>
+    <a href="{% url 'program_cat_add' %}"><button class="btn btn-default">Add New Programme Category</button></a>
+    <div>
+        {%  for program in program_categories %}
+        <div>
+            <a href="{% url 'program_cat_edit' program.id %}">{{ program.name }}</a>
+        </div>
+        {% endfor %}
+    </div>
+
+
+</div>
+{% endblock %}
