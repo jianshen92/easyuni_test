@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>All Programs</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="action-buttons">
+        <a href={% url 'program_cat_add' %}><button class="btn btn-default">Add New Programme Category</button></a>
+        <a href={% url 'program_add' %}><button class="btn btn-default">Add New Program</button></a>
+        <a href={% url 'training_add' %}><button class="btn btn-default">Add New Training</button></a>
+        <a href={% url 'training_date_add' %}><button class="btn btn-default">Add New Training Date</button></a>
+    </div>
+    <h3>All Programs</h3>
+
+    <div>
+        {% for program_category in program_categories %}
+            <h4> {{ program_category.name }}</h4>
+            {% for program in program_category.program.all %}
+                <h5><u>{{ program.name }}</u></h5>
+                <ul>
+                {% for training in program.training.all %}
+                    <li>
+                        {{ training.get_trainer_venue }}
+                        <ul>
+                            {% for training_date in training.training_date.all %}
+                                <li><a href="{% url 'training_date_edit' training_date.id %}"> {{ training_date }} </a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+        {% endfor %}
+{#        {% for program in programs %}#}
+{#            <p>{{ program.category.name }}</p>#}
+{#        {% endfor %}#}
+    </div>
+</div>
+{% endblock %}

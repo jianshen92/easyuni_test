@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.db.models import Prefetch
 
 from .models import ProgramCategory, Program, Training, TrainingDate
 from .forms import ProgramCategoryForm, ProgramForm, TrainingForm, TrainingDateForm
 
 import calendar
+
 
 # Create your views here.
 def display_view(request):
@@ -15,9 +17,19 @@ def display_view(request):
 
     month_array = [calendar.month_name[i+current_month][:3] for i in range(months_to_view)]
 
-    program_cats = ProgramCategory.objects.all()
+    program_cats = ProgramCategory.objects.all()\
+            .prefetch_related(Prefetch('program__training__training_date', queryset=TrainingDate.objects.order_by('start_date')))
 
     return render(request, template_name, {'program_categories': program_cats, 'months' : month_array})
+
+def all_edit(request):
+    template_name = 'programme/all_edit.html'
+
+    program_cats = ProgramCategory.objects.all() \
+        .prefetch_related(
+        Prefetch('program__training__training_date', queryset=TrainingDate.objects.order_by('start_date')))
+
+    return render(request, template_name, {'program_categories': program_cats})
 
 ############### Program Category ###################
 def program_category(request):
@@ -28,7 +40,7 @@ def program_category(request):
     return render(request, template_name, {'program_categories': program_cats})
 
 def add_program_category(request):
-    template_name = 'programme/program_cat_add.html'
+    template_name = 'programme/program_cat_edit.html'
 
     if request.method == 'POST':
         forms = ProgramCategoryForm(request.POST)
@@ -42,7 +54,7 @@ def add_program_category(request):
     return render(request, template_name, {'forms': forms})
 
 def edit_program_category(request, id):
-    template_name = 'programme/program_cat_add.html'
+    template_name = 'programme/program_cat_edit.html'
 
     program_cat = ProgramCategory.objects.get(pk=id)
     if request.method == 'GET':
@@ -51,12 +63,12 @@ def edit_program_category(request, id):
     elif request.method == 'POST':
         if request.POST.get('delete'):
             program_cat.delete()
-            return HttpResponseRedirect(reverse('program_cat'))
+            return HttpResponseRedirect(reverse('all_edit'))
         forms = ProgramCategoryForm(request.POST,instance=program_cat)
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('program_cat'))
+            return HttpResponseRedirect(reverse('all_edit'))
 
 ############### Program ###################
 def program(request):
@@ -91,12 +103,12 @@ def program_edit(request, id):
     elif request.method == 'POST':
         if request.POST.get('delete'):
             program.delete()
-            return HttpResponseRedirect(reverse('program'))
+            return HttpResponseRedirect(reverse('all_edit'))
         forms = ProgramForm(request.POST,instance=program)
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('program'))
+            return HttpResponseRedirect(reverse('all_edit'))
 
     return render(request, template_name, {'forms' : forms})
 
@@ -132,12 +144,12 @@ def training_edit(request, id):
     elif request.method == 'POST':
         if request.POST.get('delete'):
             training.delete()
-            return HttpResponseRedirect(reverse('training'))
+            return HttpResponseRedirect(reverse('all_edit'))
         forms = TrainingForm(request.POST, request.FILES, instance=training)
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('training'))
+            return HttpResponseRedirect(reverse('all_edit'))
 
     return render(request, template_name, {'forms': forms})
 
@@ -146,7 +158,10 @@ def training_edit(request, id):
 def training_date(request):
     template_name = 'programme/training_date.html'
 
-    program_cats = ProgramCategory.objects.all()
+    program_cats = ProgramCategory.objects.all() \
+        .prefetch_related(
+        Prefetch('program__training__training_date', queryset=TrainingDate.objects.order_by('start_date')))
+
     return render(request, template_name, {'program_categories': program_cats})
 
 def training_date_add(request):
@@ -174,11 +189,11 @@ def training_date_edit(request, id):
     elif request.method == 'POST':
         if request.POST.get('delete'):
             training_date.delete()
-            return HttpResponseRedirect(reverse('training_date'))
+            return HttpResponseRedirect(reverse('all_edit'))
         forms = TrainingDateForm(request.POST, instance=training_date)
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('training_date'))
+            return HttpResponseRedirect(reverse('all_edit'))
 
     return render(request, template_name, {'forms': forms})

@@ -25,8 +25,12 @@ class Training(models.Model):
     hotel = models.CharField(max_length=100, help_text='Hotel of the Training')
     pdf = models.FileField(upload_to='uploads/', blank=True, null=True);
 
-    def __str__(self):
+    def get_trainer_venue(self):
         return self.trainer + " @ " + self.venue
+
+    def __str__(self):
+
+        return self.program.name + " - " +  self.trainer + " @ " + self.venue
 
 class TrainingDate(models.Model):
     training = models.ForeignKey(Training, related_name='training_date', on_delete=models.SET_NULL,blank=True, null=True)

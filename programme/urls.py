@@ -3,6 +3,10 @@ from programme import views
 
 urlpatterns = [
     url(r'^$', views.display_view, name="display_page"),
+    url(r'^edit/$', views.all_edit, name="all_edit"),
+]
+
+urlpatterns += [
     url(r'^programcat/$', views.program_category, name="program_cat"),
     url(r'^programcat/add/$', views.add_program_category, name="program_cat_add"),
     url(r'^programcat/edit/(?P<id>[0-9]+)/?$', views.edit_program_category, name="program_cat_edit"),
