@@ -26,7 +26,9 @@ SQLite was used as the project was never meant for production.
 ## Omitted Optimization
 As this is a MVP, many aspects were omitted:
 * UI/UX. No custom CSS files were included. Only basic bootstrap components.
+* Class Based View for better code refactoring.
 * A separate Model class for `Trainer`
 * Dynamic Calender Month and Year
 * Unique PDF for each Training Date/Location. I assumed the same pdf will be used for the same program.
 * QuerySet optimization.
+
