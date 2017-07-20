@@ -17,9 +17,11 @@ def display_view(request):
     month_array = [calendar.month_name[i+current_month][:3] for i in range(months_to_view)]
 
     program_cats = ProgramCategory.objects.all()\
-            .prefetch_related(Prefetch('program__training__training_date', queryset=TrainingDate.objects.order_by('start_date')))
+            .prefetch_related(Prefetch('program__training__training_date',
+                                       queryset=TrainingDate.objects.order_by('start_date')))
 
     return render(request, template_name, {'program_categories': program_cats, 'months' : month_array})
+
 
 def all_edit(request):
     template_name = 'programme/all_edit.html'
@@ -30,6 +32,7 @@ def all_edit(request):
 
     return render(request, template_name, {'program_categories': program_cats})
 
+
 ############### Program Category ###################
 def add_program_category(request):
     template_name = 'programme/program_cat_edit.html'
@@ -39,11 +42,12 @@ def add_program_category(request):
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('program_cat'))
+            return HttpResponseRedirect(reverse('all_edit'))
     else:
         forms = ProgramCategoryForm()
 
     return render(request, template_name, {'forms': forms})
+
 
 def edit_program_category(request, id):
     template_name = 'programme/program_cat_edit.html'
@@ -62,6 +66,7 @@ def edit_program_category(request, id):
             # do something.
             return HttpResponseRedirect(reverse('all_edit'))
 
+
 ############### Program ###################
 def program_add(request):
     template_name = 'programme/program_edit.html'
@@ -74,9 +79,10 @@ def program_add(request):
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('program'))
+            return HttpResponseRedirect(reverse('all_edit'))
 
     return render(request, template_name, {'forms' : forms})
+
 
 def program_edit(request, id):
     template_name = 'programme/program_edit.html'
@@ -97,6 +103,7 @@ def program_edit(request, id):
 
     return render(request, template_name, {'forms' : forms})
 
+
 ############### Training ###################
 
 def training_add(request):
@@ -110,9 +117,10 @@ def training_add(request):
         if forms.is_valid():
             forms.save()
             # do something.
-            return HttpResponseRedirect(reverse('training'))
+            return HttpResponseRedirect(reverse('all_edit'))
 
     return render(request, template_name, {'forms': forms})
+
 
 def training_edit(request, id):
     template_name = 'programme/training_edit.html'
@@ -133,8 +141,8 @@ def training_edit(request, id):
 
     return render(request, template_name, {'forms': forms})
 
-############### Training Date ###################
 
+############### Training Date ###################
 def training_date_add(request):
         template_name = 'programme/training_date_edit.html'
 
@@ -146,9 +154,10 @@ def training_date_add(request):
             if forms.is_valid():
                 forms.save()
                 # do something.
-                return HttpResponseRedirect(reverse('training_date'))
+                return HttpResponseRedirect(reverse('all_edit'))
 
         return render(request, template_name, {'forms': forms})
+
 
 def training_date_edit(request, id):
     template_name = 'programme/training_date_edit.html'

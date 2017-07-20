@@ -17,13 +17,19 @@
 
     <div>
         {% for program_category in program_categories %}
-            <h4> {{ program_category.name }}</h4>
+            <h4> {{ program_category.name }}
+                <a href={% url 'program_cat_edit' program_category.id %}><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </h4>
             {% for program in program_category.program.all %}
-                <h5><u>{{ program.name }}</u></h5>
+                <h5>
+                    <u>{{ program.name }}</u>
+                    <a href={% url 'program_edit' program.id %}><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </h5>
                 <ul>
                 {% for training in program.training.all %}
                     <li>
                         {{ training.get_trainer_venue }}
+                        <a href={% url 'training_edit' training.id %}><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         <ul>
                             {% for training_date in training.training_date.all %}
                                 <li><a href="{% url 'training_date_edit' training_date.id %}"> {{ training_date }} </a></li>
