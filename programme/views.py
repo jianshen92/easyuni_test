@@ -9,7 +9,6 @@ from .forms import ProgramCategoryForm, ProgramForm, TrainingForm, TrainingDateF
 import calendar
 
 
-# Create your views here.
 def display_view(request):
     template_name = 'programme/display_view.html'
     months_to_view = 6
@@ -32,13 +31,6 @@ def all_edit(request):
     return render(request, template_name, {'program_categories': program_cats})
 
 ############### Program Category ###################
-def program_category(request):
-    template_name = 'programme/program_cat.html'
-
-    program_cats = ProgramCategory.objects.all()
-
-    return render(request, template_name, {'program_categories': program_cats})
-
 def add_program_category(request):
     template_name = 'programme/program_cat_edit.html'
 
@@ -71,13 +63,6 @@ def edit_program_category(request, id):
             return HttpResponseRedirect(reverse('all_edit'))
 
 ############### Program ###################
-def program(request):
-    template_name = 'programme/program.html'
-
-    program = Program.objects.select_related('category').all()
-
-    return render(request, template_name, {'programs': program})
-
 def program_add(request):
     template_name = 'programme/program_edit.html'
 
@@ -113,11 +98,6 @@ def program_edit(request, id):
     return render(request, template_name, {'forms' : forms})
 
 ############### Training ###################
-def training(request):
-    template_name = 'programme/training.html'
-
-    program_cats = ProgramCategory.objects.all()
-    return render(request, template_name, {'program_categories': program_cats})
 
 def training_add(request):
     template_name = 'programme/training_edit.html'
@@ -154,15 +134,6 @@ def training_edit(request, id):
     return render(request, template_name, {'forms': forms})
 
 ############### Training Date ###################
-
-def training_date(request):
-    template_name = 'programme/training_date.html'
-
-    program_cats = ProgramCategory.objects.all() \
-        .prefetch_related(
-        Prefetch('program__training__training_date', queryset=TrainingDate.objects.order_by('start_date')))
-
-    return render(request, template_name, {'program_categories': program_cats})
 
 def training_date_add(request):
         template_name = 'programme/training_date_edit.html'

@@ -19,7 +19,9 @@
                 {% for field in forms %}
                     <div class="form-group">
                         {{ field.errors }}
+
                         {{ field.label_tag }} {{ field|add_class:"form-control" }}
+                        <p class="help-block">{{ field.help_text }}</p>
                     </div>
                 {% endfor %}
                 <input class="btn btn-default" type="submit" value="Submit" />
